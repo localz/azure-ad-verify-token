@@ -60,15 +60,13 @@ export function verify(token: string, options: VerifyOptions) {
 
   try {
     decoded = jwt.decode(token, { complete: true, json: true });
-    kid = decoded?.header.kid;
+    // @ts-ignore
+    kid = decoded.header.kid;
   } catch (error) {
     return Promise.reject('invalid token');
   }
 
-  if (!kid) {
-    return Promise.reject('could not find kid');
-  }
-
+  // @ts-ignore
   return getPublicKey(jwksUri, kid).then((key) =>
     jwt.verify(token, key, {
       algorithms: ['RS256'],

@@ -48,8 +48,10 @@ describe('verify method', () => {
   });
 
   it('should return error when token invalid', async () => {
-    const result = verify('invalid_token', options);
-
-    await expect(result).rejects.toBe('invalid token');
+    try {
+      await verify('invalid_token', options);
+    } catch (e) {
+      expect(e).toBe('invalid token');
+    }
   });
 });
