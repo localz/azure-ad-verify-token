@@ -36,12 +36,14 @@ export function setItem(key: string, value: string) {
  */
 export function setDeferredItem(key: string) {
   let done: (value: string) => void;
+
   const result = new Promise<string>((resolve) => {
     done = resolve;
   });
 
   return cache.set(key, {
     result,
+    // @ts-ignore
     done,
     expiry: getExpiry(),
   });

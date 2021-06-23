@@ -5,7 +5,7 @@ export interface Config {
   /**
    * Number of milliseconds to cache public keys. Default: 1 hour
    */
-  cacheLifetime?: number;
+  cacheLifetime: number;
 }
 
 /**

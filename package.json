@@ -1,5 +1,5 @@
 {
-  "name": "azure-ad-verify-token",
+  "name": "@localz/azure-ad-verify-token",
   "version": "1.1.1",
   "description": "Verify JWT issued by Azure Active Directory B2C.",
   "keywords": [
@@ -30,17 +30,16 @@
     "dist"
   ],
   "scripts": {
-    "lint": "eslint . --ext .js,.ts",
-    "test": "jest",
-    "build": "tsc -p ./tsconfig.json",
-    "prepublishOnly": "npm run build",
-    "release": "standard-version",
-    "format": "prettier --write ."
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test --coverage",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why",
+    "patch": "npm version patch && git push --follow-tags",
+    "minor": "npm version minor && git push --follow-tags",
+    "major": "npm version major && git push --follow-tags"
   },
   "devDependencies": {
     "@justinlettau/renovate-config": "^0.1.2",
@@ -59,11 +58,34 @@
     "standard-version": "^9.0.0",
     "ts-jest": "^26.4.4",
     "ts-node": "^9.0.0",
+    "tsdx": "^0.14.1",
     "typescript": "^4.1.2"
   },
   "dependencies": {
     "jsonwebtoken": "^8.5.1",
     "node-fetch": "^2.6.1",
     "rsa-pem-from-mod-exp": "^0.8.4"
-  }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "module": "dist/express-access-checker.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/express-access-checker.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/express-access-checker.esm.js",
+      "limit": "10 KB"
+    }
+  ]
 }

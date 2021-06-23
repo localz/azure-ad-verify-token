@@ -1,0 +1,37 @@
+env:
+  NODE_VERSION: "14"
+
+steps:
+  - label: ":hammer: Test - Node 14 Alpine"
+    command: "yarn test"
+    plugins:
+      - docker-login#v2.0.1:
+          username: localzservice
+          password-env: DOCKER_LOGIN_PASSWORD
+      - docker-compose#v3.7.0:
+          run: azure-ad-verify-token
+          config:
+            - docker-compose.yml
+            - docker-compose.node-v14-alpine.yml
+          shell: false
+          env:
+            - NPM_TOKEN
+
+  - wait
+
+  - label: ":cloud: Publish"
+    if: build.tag != null
+    commands:
+      - npm config set "//registry.npmjs.org/:_authToken" $${NPM_TOKEN}
+      - yarn
+      - rm -rf dist
+      - yarn build
+      - npm publish
+    plugins:
+      - docker-login#v2.0.1:
+          username: localzservice
+          password-env: DOCKER_LOGIN_PASSWORD
+      - docker#v3.8.0:
+          image: localz/buildkite-node:${NODE_VERSION}
+          environment:
+            - NPM_TOKEN

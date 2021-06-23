@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { Jwt } from 'jsonwebtoken';
 import fetch from 'node-fetch';
 import getPem from 'rsa-pem-from-mod-exp';
 
@@ -55,14 +55,18 @@ function getPublicKey(jwksUri: string, kid: string) {
 export function verify(token: string, options: VerifyOptions) {
   const { jwksUri, audience, issuer } = options;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let decoded: { [key: string]: any };
-  let kid: string;
+  let decoded: Jwt | null;
+  let kid: string | undefined;
 
   try {
     decoded = jwt.decode(token, { complete: true, json: true });
-    kid = decoded.header.kid;
+    kid = decoded?.header.kid;
   } catch (error) {
     return Promise.reject('invalid token');
+  }
+
+  if (!kid) {
+    return Promise.reject('could not find kid');
   }
 
   return getPublicKey(jwksUri, kid).then((key) =>

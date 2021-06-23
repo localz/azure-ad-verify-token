@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+  azure-ad-verify-token:
+    image: azure-ad-verify-token
+    build:
+      context: .
+      args:
+        - NPM_TOKEN=$NPM_TOKEN

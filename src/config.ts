@@ -8,7 +8,7 @@ export const DEFAULT_CACHE_LIFETIME = 60 * 60 * 1000; // one hour
 /**
  * Current configuration.
  */
-let config: Config = {
+const config: Config = {
   cacheLifetime: DEFAULT_CACHE_LIFETIME,
 };
 
@@ -32,7 +32,5 @@ export function getConfig() {
  * Reset configuration to defaults.
  */
 export function resetConfig() {
-  config = {
-    cacheLifetime: DEFAULT_CACHE_LIFETIME,
-  };
+  config.cacheLifetime = DEFAULT_CACHE_LIFETIME;
 }
